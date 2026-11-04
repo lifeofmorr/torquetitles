@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "next": "^15.3.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "description": "TorqueTitles full-stack rebuild \u2014 Next.js App Router + Tailwind. DBA of LIFEOFMORR LLC: vehicle title & registration filing service (risk screen before payment, published all-in pricing).",
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  },
+  "name": "torquetitles-app",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "test:screen": "node scripts/screen-tests.mjs",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "version": "1.0.0"
+}
