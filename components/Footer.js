@@ -39,7 +39,7 @@ export default function Footer() {
         <p className="footer-disclaimer">{DISCLAIMER}</p>
         <div className="footer-legal">
           <span>
-            © {new Date().getFullYear()} {SITE.entityLine}. All rights reserved.
+            © {new Date().getFullYear()} {SITE.entityLine} All rights reserved.
           </span>
           <span>{SITE.entityDetail}</span>
         </div>

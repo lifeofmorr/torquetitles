@@ -4,7 +4,7 @@
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
-  "description": "TorqueTitles full-stack rebuild \u2014 Next.js App Router + Tailwind. DBA of LIFEOFMORR LLC: vehicle title & registration filing service (risk screen before payment, published all-in pricing).",
+  "description": "TorqueTitles full-stack rebuild \u2014 Next.js App Router + Tailwind. A service of LIFEOFMORR LLC: vehicle title & registration filing service (risk screen before payment, published all-in pricing).",
   "devDependencies": {
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",

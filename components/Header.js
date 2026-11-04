@@ -1,4 +1,4 @@
-import { NAV, SITE } from "../lib/data";
+import { NAV } from "../lib/data";
 
 export default function Header() {
   return (
@@ -20,10 +20,6 @@ export default function Header() {
             Free eligibility screen
           </a>
         </nav>
-      </div>
-      <div className="nav-sub wrap-w">
-        <span>{SITE.descriptor}</span>
-        <span className="nav-sub-r">Screen first. Pay second. Never the other way around.</span>
       </div>
     </header>
   );
