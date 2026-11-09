@@ -11,6 +11,15 @@ export const metadata = {
   },
   description:
     "TorqueTitles prepares and files vehicle title and registration paperwork — conversions, lost titles, estates, rebuilt vehicles. Published prices, a six-question eligibility screen before payment, and a full refund until your filing is submitted.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    title: "TorqueTitles — Vehicle Titles & Registration Filings",
+    description:
+      "TorqueTitles prepares and files vehicle title and registration paperwork — conversions, lost titles, estates, rebuilt vehicles. Published prices, a six-question eligibility screen before payment, and a full refund until your filing is submitted.",
+    url: "/",
+    siteName: "TorqueTitles",
+    type: "website",
+  },
   icons: {
     icon: "/assets/logo.svg",
     apple: "/assets/logo.svg",

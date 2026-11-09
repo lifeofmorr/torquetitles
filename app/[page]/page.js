@@ -2,6 +2,9 @@ import { notFound } from "next/navigation";
 import PhotoBand from "../../components/PhotoBand";
 import Reveal from "../../components/Reveal";
 import { FinalCta, SectionHead } from "../../components/Sections";
+// GATE-PENDING (Q4) — public pricing buy buttons. DO NOT SHIP without
+// Don / main-seat adjudication; see components/PricingBuyActions.js.
+import PricingBuyAction from "../../components/PricingBuyActions";
 import { GUARANTEE, PHOTOS, PRICING } from "../../lib/data";
 import pages from "../../content/pages.json";
 
@@ -72,6 +75,12 @@ function PricingPage({ p }) {
                 <div className="p-row">
                   <b>Government / third-party:</b> {t.gov}
                 </div>
+                {/* GATE-PENDING (Q4) — public buy button. Conflicts with
+                    launch-checklist §5 (screen before payment). The
+                    entire gate-pending pricing change is this block +
+                    components/PricingBuyActions.js; delete both to drop
+                    it. DO NOT SHIP without adjudication. */}
+                <PricingBuyAction tier={t} />
               </Reveal>
             ))}
           </div>

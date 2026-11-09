@@ -5,6 +5,7 @@ import {
   VERDICT_COPY,
   evaluate,
 } from "../lib/screen";
+import { PRICING } from "../lib/data";
 
 /**
  * The eligibility screen widget — React port of the Phase-1 widget
@@ -34,6 +35,39 @@ const STATES =
     " "
   );
 
+/* Q4 (Wave-1) — the post-screen payment step.
+ * The Stripe links in lib/data.js are post-screen handoff targets
+ * (launch-checklist §5): a tier link renders on this confirmation ONLY
+ * after the server has recorded the intake and returned a green "ready"
+ * verdict with the route's disclosure (where required) satisfied — i.e.
+ * exactly the files the records say receive their route's link. Amber
+ * never renders one (signed acknowledgment + human review come first);
+ * red never renders one. The API contract is unchanged: it still returns
+ * payment_link: null in every case (Phase-1 semantics); this step is a
+ * presentation of the recorded green outcome, not a public buy button.
+ * Routes priced by written quote (the Florida desks, title recovery)
+ * and vehicle classes with no published tier resolve to null — for
+ * those files the office confirms the exact price in writing first,
+ * as the verdict copy states. */
+const CORE_FILING_ROUTES = [
+  "general",
+  "montana_llc",
+  "sd_title",
+  "open_state_conversion",
+];
+const CARS_RV_CLASSES = ["car", "truck", "suv", "rv", "motorcycle"];
+
+function payableTier(route, vehicleClass) {
+  let key = null;
+  if (route === "domicile_subscription") {
+    key = "ownershipCover";
+  } else if (CORE_FILING_ROUTES.includes(route)) {
+    if (vehicleClass === "powersports") key = "powersports";
+    else if (CARS_RV_CLASSES.includes(vehicleClass)) key = "carsRv";
+  }
+  return key ? PRICING.find((t) => t.key === key) || null : null;
+}
+
 function StateOptions() {
   return STATES.map((s) => (
     <option key={s} value={s}>
@@ -48,6 +82,7 @@ export default function ScreenWidget() {
   const [showDisclosure, setShowDisclosure] = useState(false);
   const [error, setError] = useState("");
   const [result, setResult] = useState(null); // {verdict, reasons, extra}
+  const [payTier, setPayTier] = useState(null); // PRICING entry, green + recorded only
   const [sending, setSending] = useState(false);
 
   function gather() {
@@ -94,6 +129,7 @@ export default function ScreenWidget() {
   async function onSubmit(ev) {
     ev.preventDefault();
     setError("");
+    setPayTier(null);
     const g = gather();
     if (!g.payload.contact.name || !g.payload.contact.email) {
       setError("Name and email are required.");
@@ -135,8 +171,22 @@ export default function ScreenWidget() {
           "A human reviews your file before any payment link is issued." +
           (j.requires ? ` Required: ${j.requires}.` : "");
       } else if (j.action === "ready") {
-        extra +=
-          "Next: we send your route's document checklist and confirm the exact price in writing before any payment.";
+        // Post-screen payment step (Q4): only a server-recorded green
+        // file whose disclosure (where the route requires one) is
+        // satisfied receives its route's link — on this confirmation,
+        // never before the screen.
+        const tier =
+          j.disclosure_satisfied === false
+            ? null
+            : payableTier(g.route, g.payload.vehicle.vehicle_class);
+        if (tier) {
+          setPayTier(tier);
+          extra +=
+            "Next: we send your route's document checklist. Your payment step is below — it opens only now, after your green screen, for this file.";
+        } else {
+          extra +=
+            "Next: we send your route's document checklist and confirm the exact price in writing before any payment.";
+        }
       } else if (j.action === "declined") {
         extra += j.referral || "";
       }
@@ -392,6 +442,41 @@ export default function ScreenWidget() {
             </ul>
           )}
           {result.extra && <p className="verdict-extra">{result.extra}</p>}
+          {payTier && result.verdict === "green" && (
+            <div
+              className="pay-step"
+              style={{
+                borderTop: "1px solid var(--line-dark)",
+                marginTop: 16,
+                paddingTop: 18,
+              }}
+            >
+              <p className="verdict-tag" style={{ color: "#5cc488" }}>
+                Payment — the step after the screen
+              </p>
+              <p>
+                Your file matches the <b>{payTier.name}</b> —{" "}
+                <b>
+                  {payTier.priceLabel}
+                  {payTier.cadence === "/year" ? " / year" : ""}
+                </b>
+                {payTier.cadence === "one-time" ? ", one-time" : ""}, plus
+                government fees itemised at cost. Paying starts your file,
+                and the Refund-Until-Filed guarantee applies from the moment
+                you pay.
+              </p>
+              <a
+                className="btn btn-accent"
+                href={payTier.stripe}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Pay {payTier.priceLabel}
+                {payTier.cadence === "/year" ? "/yr" : ""} — secure Stripe
+                checkout
+              </a>
+            </div>
+          )}
         </div>
       )}
     </form>
