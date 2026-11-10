@@ -141,12 +141,24 @@ export default function Home() {
           </div>
           <figure className="hero-media">
             <div className="hero-media-main">
-              <img
-                src={PHOTOS.rvRoad.url}
-                alt={PHOTOS.rvRoad.subject}
-                loading="eager"
-                fetchPriority="high"
-              />
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                poster="/assets/hero-video-poster.jpg"
+                aria-label={PHOTOS.rvRoad.subject}
+              >
+                <source src="/assets/hero-video.webm" type="video/webm" />
+                <source src="/assets/hero-video.mp4" type="video/mp4" />
+                <img
+                  src={PHOTOS.rvRoad.url}
+                  alt={PHOTOS.rvRoad.subject}
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </video>
               <figcaption>The vehicle is the easy part. The paper is the work.</figcaption>
             </div>
             <div className="hero-media-row">
